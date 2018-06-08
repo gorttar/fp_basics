@@ -85,4 +85,9 @@ fun main(args: Array<String>) {
         val fy = fxy("bar")
         fy("qaz")
     }
+
+    // сигнатуры функций высших порядков в Java выглядят слегка многословными
+    val hof: (String) -> (String) -> String = { x -> { y -> x + y + x } }
+    // частичное применение в Java очень многословно
+    hof("foo")("bar")
 }
