@@ -21,13 +21,19 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlin_version = '1.2.41'
     repositories {
         mavenCentral()
     }
     dependencies {
+        classpath 'org.testng:testng:6.13.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+}
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
 
 compileKotlin {
@@ -40,4 +46,8 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.8'
 }

@@ -29,8 +29,8 @@ public interface YCombinator {
     }
 
     static void main(String[] args) {
-        var factorial = y((F<Integer, Integer> f) -> (Integer n) -> (n <= 1) ? 1 : n * f.a(n - 1));
-        var fibonacci = y((F<Integer, Integer> f) -> (Integer n) -> (n <= 2) ? 1 : f.a(n - 1) + f.a(n - 2));
+        F<Integer, Integer> factorial = y(f -> n -> (n <= 1) ? 1 : n * f.a(n - 1));
+        F<Integer, Integer> fibonacci = y(f -> n -> (n <= 2) ? 1 : f.a(n - 1) + f.a(n - 2));
         System.out.print("Factorial(1..10)   : ");
         IntStream.rangeClosed(1, 10).forEach(i -> System.out.printf("%s ", factorial.a(i)));
         System.out.print("\nFibonacci(1..10)   : ");

@@ -10,7 +10,6 @@ package pain.killers;
 public interface EF2<
         A, B,
         T extends Throwable,
-        T2 extends Throwable> extends EFT<A, B> {
-    @Override
+        T2 extends Throwable> {
     B a(A a) throws T, T2;
 }

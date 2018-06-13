@@ -12,7 +12,6 @@ public interface EF4<
         T extends Throwable,
         T2 extends Throwable,
         T3 extends Throwable,
-        T4 extends Throwable> extends EFT<A, B> {
-    @Override
+        T4 extends Throwable> {
     B a(A a) throws T, T2, T3, T4;
 }

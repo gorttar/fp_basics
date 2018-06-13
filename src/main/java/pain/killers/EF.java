@@ -9,6 +9,6 @@ package pain.killers;
 @FunctionalInterface
 public interface EF<
         A, B,
-        T extends Throwable> extends EFT<A, B> {
+        T extends Throwable> {
     B a(A a) throws T;
 }

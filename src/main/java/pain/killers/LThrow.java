@@ -3,8 +3,6 @@
  */
 package pain.killers;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.function.Function;
 
 /**
@@ -19,8 +17,12 @@ public final class LThrow {
         throw (T) t;
     }
 
-    @NotNull
-    private static <A, B> Function<A, B> toFunction(EFT<? super A, ? extends B> ef) {
+    public static <A, B,
+            T extends Throwable> Function<A, B> fThrows(
+            EF<
+                    ? super A, ? extends B,
+                    T> ef)
+            throws T {
         return a -> {
             try {
                 return ef.a(a);
@@ -31,22 +33,19 @@ public final class LThrow {
     }
 
     public static <A, B,
-            T extends Throwable> Function<A, B> fThrows(
-            EF<
-                    ? super A, ? extends B,
-                    T> ef)
-            throws T {
-        return toFunction(ef);
-    }
-
-    public static <A, B,
             T extends Throwable,
             T2 extends Throwable> Function<A, B> fThrows2(
             EF2<
                     ? super A, ? extends B,
                     T, T2> ef)
             throws T, T2 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -57,7 +56,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3> ef)
             throws T, T2, T3 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -69,7 +74,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4> ef)
             throws T, T2, T3, T4 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -82,7 +93,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4, T5> ef)
             throws T, T2, T3, T4, T5 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -96,7 +113,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4, T5, T6> ef)
             throws T, T2, T3, T4, T5, T6 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -111,7 +134,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4, T5, T6, T7> ef)
             throws T, T2, T3, T4, T5, T6, T7 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -127,7 +156,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4, T5, T6, T7, T8> ef)
             throws T, T2, T3, T4, T5, T6, T7, T8 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -144,7 +179,13 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4, T5, T6, T7, T8, T9> ef)
             throws T, T2, T3, T4, T5, T6, T7, T8, T9 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 
     public static <A, B,
@@ -162,6 +203,12 @@ public final class LThrow {
                     ? super A, ? extends B,
                     T, T2, T3, T4, T5, T6, T7, T8, T9, T10> ef)
             throws T, T2, T3, T4, T5, T6, T7, T8, T9, T10 {
-        return toFunction(ef);
+        return a -> {
+            try {
+                return ef.a(a);
+            } catch (Throwable t) {
+                return st(t);
+            }
+        };
     }
 }

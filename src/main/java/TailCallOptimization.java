@@ -53,7 +53,7 @@ public class TailCallOptimization {
 
         @Override
         public B get() {
-            var step = next();
+            TCResult<B> step = next();
             //noinspection StatementWithEmptyBody
             for (; step instanceof Call; step = ((Call<A, B>) step).next()) {
             }

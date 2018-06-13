@@ -13,11 +13,12 @@ import java.util.stream.Stream;
  * @author Andrey Antipov (andrey.antipov@cxense.com) (2018-06-08 17:30)
  */
 public class Basics {
+    @SuppressWarnings({"unused", "Convert2MethodRef"})
     public static void main(String[] args) {
         // Компактный синтаксис λ-функций?
         final Function<String, String> fx = x -> x + "foo";
         final Function<String, String> fx1 = x -> {
-            var y = "foo";
+            String y = "foo";
             return x + y;
         };
 

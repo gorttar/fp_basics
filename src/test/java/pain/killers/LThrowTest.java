@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 /**
  * @author Andrey Antipov (gorttar@gmail.com) (2018-06-10)
  */
+@SuppressWarnings("ConstantConditions")
 public class LThrowTest {
     private class E extends Throwable {
     }
@@ -55,7 +56,9 @@ public class LThrowTest {
                         <String, Void, E, E2>
                         fThrows2(
                         x -> {
-                            if (false) throw new E2();
+                            if (false) {
+                                throw new E2();
+                            }
                             throw new E();
                         }).apply(null);
     }
@@ -66,7 +69,9 @@ public class LThrowTest {
                 <String, Void, E, E2>
                         fThrows2(
                         x -> {
-                            if (false) throw new E();
+                            if (false) {
+                                throw new E();
+                            }
                             throw new E2();
                         }).apply(null);
     }
@@ -77,8 +82,12 @@ public class LThrowTest {
                 <String, Void, E, E2, E3>
                         fThrows3(
                         x -> {
-                            if (false) throw new E2();
-                            if (false) throw new E3();
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
                             throw new E();
                         }).apply(null);
     }
@@ -89,8 +98,12 @@ public class LThrowTest {
                 <String, Void, E, E2, E3>
                         fThrows3(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E3();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
                             throw new E2();
                         }).apply(null);
     }
@@ -101,8 +114,12 @@ public class LThrowTest {
                 <String, Void, E, E2, E3>
                         fThrows3(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E2();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E2();
+                            }
                             throw new E3();
                         }).apply(null);
     }
@@ -113,9 +130,15 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4>
                         fThrows4(
                         x -> {
-                            if (false) throw new E2();
-                            if (false) throw new E3();
-                            if (false) throw new E4();
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
                             throw new E();
                         }).apply(null);
     }
@@ -126,9 +149,15 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4>
                         fThrows4(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E3();
-                            if (false) throw new E4();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
                             throw new E2();
                         }).apply(null);
     }
@@ -139,9 +168,15 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4>
                         fThrows4(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E2();
-                            if (false) throw new E4();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
                             throw new E3();
                         }).apply(null);
     }
@@ -152,9 +187,15 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4>
                         fThrows4(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E2();
-                            if (false) throw new E3();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
                             throw new E4();
                         }).apply(null);
     }
@@ -165,10 +206,18 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4, E5>
                         fThrows5(
                         x -> {
-                            if (false) throw new E2();
-                            if (false) throw new E3();
-                            if (false) throw new E4();
-                            if (false) throw new E5();
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
+                            if (false) {
+                                throw new E5();
+                            }
                             throw new E();
                         }).apply(null);
     }
@@ -179,10 +228,18 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4, E5>
                         fThrows5(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E3();
-                            if (false) throw new E4();
-                            if (false) throw new E5();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
+                            if (false) {
+                                throw new E5();
+                            }
                             throw new E2();
                         }).apply(null);
     }
@@ -193,10 +250,18 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4, E5>
                         fThrows5(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E2();
-                            if (false) throw new E4();
-                            if (false) throw new E5();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
+                            if (false) {
+                                throw new E5();
+                            }
                             throw new E3();
                         }).apply(null);
     }
@@ -207,10 +272,18 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4, E5>
                         fThrows5(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E2();
-                            if (false) throw new E3();
-                            if (false) throw new E5();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
+                            if (false) {
+                                throw new E5();
+                            }
                             throw new E4();
                         }).apply(null);
     }
@@ -221,10 +294,18 @@ public class LThrowTest {
                 <String, Void, E, E2, E3, E4, E5>
                         fThrows5(
                         x -> {
-                            if (false) throw new E();
-                            if (false) throw new E2();
-                            if (false) throw new E3();
-                            if (false) throw new E4();
+                            if (false) {
+                                throw new E();
+                            }
+                            if (false) {
+                                throw new E2();
+                            }
+                            if (false) {
+                                throw new E3();
+                            }
+                            if (false) {
+                                throw new E4();
+                            }
                             throw new E5();
                         }).apply(null);
     }
