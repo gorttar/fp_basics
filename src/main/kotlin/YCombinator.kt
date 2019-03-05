@@ -1,11 +1,11 @@
-private interface RF<F : Function1<*, *>> : (RF<F>) -> F
+private interface W<A, B> : (W<A, B>) -> (A) -> B
 
 fun <A, B> y(f: ((A) -> B) -> (A) -> B): (A) -> B {
-    val rf = object : RF<(A) -> B> {
-        override fun invoke(w: RF<(A) -> B>) = f { a -> w(w)(a) }
+    val w = object : W<A, B> {
+        override fun invoke(w: W<A, B>) = f { x -> w(w)(x) }
     }
 
-    return rf(rf)
+    return w(w)
 }
 
 fun main() {
