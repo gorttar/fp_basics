@@ -38,7 +38,7 @@ public class Basics {
                                 throw new RuntimeException(e);
                             }
                         }) // а вот так можно
-                .forEach(line -> System.out.println(line));
+                .forEach(x -> System.out.println(x));
 
         // сигнатуры функций высших порядков в Java выглядят слегка многословными
         Function<String, Function<String, String>> hof = x -> y -> x + y + x;
