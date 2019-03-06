@@ -1,12 +1,10 @@
 package tco
 
-private val evenOpt: TCFunction<Int, Boolean> = { n -> if (n == 0) true.ret else oddOpt[n - 1] }
-private val oddOpt: TCFunction<Int, Boolean> = { n -> if (n == 0) false.ret else evenOpt[n - 1] }
+private val evenOpt: TailFunction<Int, Boolean> = { n -> if (n == 0) true.ret else oddOpt[n - 1] }
+private val oddOpt: TailFunction<Int, Boolean> = { n -> if (n == 0) false.ret else evenOpt[n - 1] }
 
-private val oddOptRef = ::oddOptF
-private val evenOptRef = ::evenOptF
-private fun evenOptF(n: Int): TCResult<Int, Boolean> = if (n == 0) true.ret else oddOptRef[n - 1]
-private fun oddOptF(n: Int): TCResult<Int, Boolean> = if (n == 0) false.ret else evenOptRef[n - 1]
+private fun evenOptF(n: Int): TailCall<Int, Boolean> = if (n == 0) true.ret else ::oddOptF[n - 1]
+private fun oddOptF(n: Int): TailCall<Int, Boolean> = if (n == 0) false.ret else ::evenOptF[n - 1]
 
 fun main() {
     println(evenOpt(10).fix) // корректно напечатает true
