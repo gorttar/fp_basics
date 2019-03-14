@@ -9,12 +9,24 @@ import org.testng.annotations.Test
 import java.math.BigInteger
 import java.math.BigInteger.ONE
 
-typealias FibArgs = Triple<BigInteger, BigInteger, Int>
+typealias Fib1Arguments = Triple<BigInteger, BigInteger, Int>
+typealias Fib2Accumulators = Pair<BigInteger, BigInteger>
 
 class TailCallTrampolineTest {
     @Test
-    fun `fibonacci numbers should be calculated correctly`() {
-        fun fibonacci(n: Int): BigInteger = fib(Triple(ONE, ONE, n)).fix
+    fun `fibonacci numbers should be calculated correctly by fib1`() {
+        fun fibonacci(n: Int): BigInteger = fib1(Triple(ONE, ONE, n)).fix
+
+        assertEquals(
+                (1..10).map(::fibonacci),
+                listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55).map(Int::toBigInteger)
+        )
+        println(fibonacci(10000))
+    }
+
+    @Test
+    fun `fibonacci numbers should be calculated correctly by fib2`() {
+        fun fibonacci(n: Int): BigInteger = fib2(ONE to ONE, n).fix
 
         assertEquals(
                 (1..10).map(::fibonacci),
@@ -52,18 +64,25 @@ class TailCallTrampolineTest {
     fun `oddF should produce correct results`(n: Int, expected: Boolean) = assertEquals(oddF(n).fix, expected)
 
     companion object {
-        private val fib: TailFunction<FibArgs, BigInteger> by lazy {
-            { args: FibArgs ->
-                val (nextAcc, acc, n) = args
-                if (n == 1) acc.ret else fib[Triple(nextAcc + acc, nextAcc, n - 1)]
+        private val fib1: TailFunction1<Fib1Arguments, BigInteger> by lazy {
+            { (nextAccumulator, accumulator, n): Fib1Arguments ->
+                if (n == 1) accumulator.ret1
+                else fib1[Triple(nextAccumulator + accumulator, nextAccumulator, n - 1)]
             }
         }
 
-        private val even: TailFunction<Int, Boolean> = { n -> if (n == 0) true.ret else odd[n - 1] }
-        private val odd: TailFunction<Int, Boolean> = { n -> if (n == 0) false.ret else even[n - 1] }
+        private val fib2: TailFunction2<Fib2Accumulators, Int, BigInteger> by lazy {
+            { (nextAccumulator, accumulator): Fib2Accumulators, n: Int ->
+                if (n == 1) accumulator.ret2
+                else fib2[nextAccumulator + accumulator to nextAccumulator, n - 1]
+            }
+        }
 
-        private fun evenF(n: Int): TailCall<Int, Boolean> = if (n == 0) true.ret else ::oddF[n - 1]
-        private fun oddF(n: Int): TailCall<Int, Boolean> = if (n == 0) false.ret else ::evenF[n - 1]
+        private val even: TailFunction1<Int, Boolean> = { n -> if (n == 0) true.ret1 else odd[n - 1] }
+        private val odd: TailFunction1<Int, Boolean> = { n -> if (n == 0) false.ret1 else even[n - 1] }
+
+        private fun evenF(n: Int): TailCall1<Int, Boolean> = if (n == 0) true.ret1 else ::oddF[n - 1]
+        private fun oddF(n: Int): TailCall1<Int, Boolean> = if (n == 0) false.ret1 else ::evenF[n - 1]
     }
 }
 
