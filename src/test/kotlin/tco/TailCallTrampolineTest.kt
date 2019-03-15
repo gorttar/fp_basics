@@ -14,6 +14,22 @@ typealias Fib2Accumulators = Pair<BigInteger, BigInteger>
 
 class TailCallTrampolineTest {
     @Test
+    fun `fibonacci numbers should be calculated correctly by fib0`() {
+        fun fibonacci(x: Int): BigInteger {
+            nextAccumulator = ONE
+            accumulator = ONE
+            n = x.toBigInteger()
+            return fib0().fix
+        }
+
+        assertEquals(
+                (1..10).map(::fibonacci),
+                listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55).map(Int::toBigInteger)
+        )
+        println(fibonacci(10000))
+    }
+
+    @Test
     fun `fibonacci numbers should be calculated correctly by fib1`() {
         fun fibonacci(n: Int): BigInteger = fib1(Triple(ONE, ONE, n)).fix
 
@@ -64,6 +80,22 @@ class TailCallTrampolineTest {
     fun `oddF should produce correct results`(n: Int, expected: Boolean) = assertEquals(oddF(n).fix, expected)
 
     companion object {
+        private lateinit var nextAccumulator: BigInteger
+        private lateinit var accumulator: BigInteger
+        private lateinit var n: BigInteger
+        private val fib0: TailFunction0<BigInteger> by lazy {
+            {
+                if (n == ONE) accumulator.ret
+                else {
+                    val tmp = nextAccumulator
+                    nextAccumulator += accumulator
+                    accumulator = tmp
+                    n--
+                    fib0.call()
+                }
+            }
+        }
+
         private val fib1: TailFunction1<Fib1Arguments, BigInteger> by lazy {
             { (nextAccumulator, accumulator, n): Fib1Arguments ->
                 if (n == 1) accumulator.ret
