@@ -51,6 +51,17 @@ class TailCallTrampolineTest {
         println(fibonacci(10000))
     }
 
+    @Test
+    fun `fibonacci numbers should be calculated correctly by fib3`() {
+        fun fibonacci(n: Int): BigInteger = fib3(ONE, ONE, n).fix
+
+        assertEquals(
+                (1..10).map(::fibonacci),
+                listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55).map(Int::toBigInteger)
+        )
+        println(fibonacci(10000))
+    }
+
     @DataProvider
     fun `data for even tests`() = arrayOf(
             arrayOf(10, true),
@@ -107,6 +118,13 @@ class TailCallTrampolineTest {
             { (nextAccumulator, accumulator): Fib2Accumulators, n: Int ->
                 if (n == 1) accumulator.ret
                 else fib2[nextAccumulator + accumulator to nextAccumulator, n - 1]
+            }
+        }
+
+        private val fib3: TailFunction3<BigInteger, BigInteger, Int, BigInteger> by lazy {
+            { nextAccumulator: BigInteger, accumulator: BigInteger, n: Int ->
+                if (n == 1) accumulator.ret
+                else fib3[nextAccumulator + accumulator, nextAccumulator, n - 1]
             }
         }
 
