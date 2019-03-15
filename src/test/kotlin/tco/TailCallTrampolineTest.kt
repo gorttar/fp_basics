@@ -94,7 +94,7 @@ class TailCallTrampolineTest {
         private lateinit var nextAccumulator: BigInteger
         private lateinit var accumulator: BigInteger
         private lateinit var n: BigInteger
-        private val fib0: TailFunction0<BigInteger> by lazy {
+        private val fib0: TF0<BigInteger> by lazy {
             {
                 if (n == ONE) accumulator.ret
                 else {
@@ -107,32 +107,32 @@ class TailCallTrampolineTest {
             }
         }
 
-        private val fib1: TailFunction1<Fib1Arguments, BigInteger> by lazy {
+        private val fib1: TF1<Fib1Arguments, BigInteger> by lazy {
             { (nextAccumulator, accumulator, n): Fib1Arguments ->
                 if (n == 1) accumulator.ret
                 else fib1[Triple(nextAccumulator + accumulator, nextAccumulator, n - 1)]
             }
         }
 
-        private val fib2: TailFunction2<Fib2Accumulators, Int, BigInteger> by lazy {
+        private val fib2: TF2<Fib2Accumulators, Int, BigInteger> by lazy {
             { (nextAccumulator, accumulator): Fib2Accumulators, n: Int ->
                 if (n == 1) accumulator.ret
                 else fib2[nextAccumulator + accumulator to nextAccumulator, n - 1]
             }
         }
 
-        private val fib3: TailFunction3<BigInteger, BigInteger, Int, BigInteger> by lazy {
+        private val fib3: TF3<BigInteger, BigInteger, Int, BigInteger> by lazy {
             { nextAccumulator: BigInteger, accumulator: BigInteger, n: Int ->
                 if (n == 1) accumulator.ret
                 else fib3[nextAccumulator + accumulator, nextAccumulator, n - 1]
             }
         }
 
-        private val even: TailFunction1<Int, Boolean> = { n -> if (n == 0) true.ret else odd[n - 1] }
-        private val odd: TailFunction1<Int, Boolean> = { n -> if (n == 0) false.ret else even[n - 1] }
+        private val even: TF1<Int, Boolean> = { n -> if (n == 0) true.ret else odd[n - 1] }
+        private val odd: TF1<Int, Boolean> = { n -> if (n == 0) false.ret else even[n - 1] }
 
-        private fun evenF(n: Int): TailCall<Boolean> = if (n == 0) true.ret else ::oddF[n - 1]
-        private fun oddF(n: Int): TailCall<Boolean> = if (n == 0) false.ret else ::evenF[n - 1]
+        private fun evenF(n: Int): Call<Boolean> = if (n == 0) true.ret else ::oddF[n - 1]
+        private fun oddF(n: Int): Call<Boolean> = if (n == 0) false.ret else ::evenF[n - 1]
     }
 }
 

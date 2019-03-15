@@ -4,11 +4,10 @@
 package tco
 
 /**
- * optimizable tail call of function
+ * optimizable call of function
  * @param R - function output type
  */
-interface TailCall<out R> {
-
+interface Call<out R> {
     /**
      * raw result of tail call optimizable function
      * access will lead to function evaluation
@@ -20,20 +19,20 @@ interface TailCall<out R> {
  * specialized type of tail call optimizable 0 argument functions
  * @param R - function output type
  */
-typealias TailFunction0<R> = () -> TailCall<R>
+typealias TF0<R> = () -> Call<R>
 
 /**
  * specialized type of tail call optimizable 1 argument functions
  * @param P1 - function input type
  */
-typealias TailFunction1<P1, R> = (P1) -> TailCall<R>
+typealias TF1<P1, R> = (P1) -> Call<R>
 
 /**
  * specialized type of tail call optimizable 2 arguments functions
  * @param P1 - 1st function input type
  * @param P2 - 2nd function input type
  */
-typealias TailFunction2<P1, P2, R> = (P1, P2) -> TailCall<R>
+typealias TF2<P1, P2, R> = (P1, P2) -> Call<R>
 
 /**
  * specialized type of tail call optimizable 3 arguments functions
@@ -41,57 +40,58 @@ typealias TailFunction2<P1, P2, R> = (P1, P2) -> TailCall<R>
  * @param P2 - 2nd function input type
  * @param P3 - 3rd function input type
  */
-typealias TailFunction3<P1, P2, P3, R> = (P1, P2, P3) -> TailCall<R>
+typealias TF3<P1, P2, P3, R> = (P1, P2, P3) -> Call<R>
 
 /**
- * tail call invocation of [TailFunction0]
- * creates next intermediate [TailCall] instead of actual evaluation
- * @receiver called [TailFunction0]
+ * tail call invocation of [TF0]
+ * creates next intermediate [Call] instead of actual evaluation
+ * @receiver called [TF0]
  */
-fun <R> TailFunction0<out R>.call(): TailCall<R> = IntermediateCall { this() }
+fun <R> TF0<out R>.call(): Call<R> = Step { this() }
 
 /**
- * tail call invocation of [TailFunction1]
- * creates next intermediate [TailCall] instead of actual evaluation
- * @receiver called [TailFunction1]
+ * tail call invocation of [TF1]
+ * creates next intermediate [Call] instead of actual evaluation
+ * @receiver called [TF1]
  * @param p1 - invocation argument
  */
-operator fun <P1, R> TailFunction1<in P1, out R>.get(p1: P1): TailCall<R> = IntermediateCall { this(p1) }
+operator fun <P1, R> TF1<in P1, out R>.get(p1: P1): Call<R> = Step { this(p1) }
 
 /**
- * tail call invocation of [TailFunction2]
- * creates next intermediate [TailCall] instead of actual evaluation
- * @receiver called [TailFunction2]
+ * tail call invocation of [TF2]
+ * creates next intermediate [Call] instead of actual evaluation
+ * @receiver called [TF2]
  * @param p1 - 1st invocation argument
  * @param p2 - 2nd invocation argument
  */
-operator fun <P1, P2, R> TailFunction2<in P1, in P2, out R>.get(p1: P1, p2: P2): TailCall<R> = IntermediateCall { this(p1, p2) }
+operator fun <P1, P2, R> TF2<in P1, in P2, out R>.get(p1: P1, p2: P2): Call<R> = Step { this(p1, p2) }
 
 /**
- * tail call invocation of [TailFunction3]
- * creates next intermediate [TailCall] instead of actual evaluation
- * @receiver called [TailFunction3]
+ * tail call invocation of [TF3]
+ * creates next intermediate [Call] instead of actual evaluation
+ * @receiver called [TF3]
  * @param p1 - 1st invocation argument
  * @param p2 - 2nd invocation argument
+ * @param p3 - 3rd invocation argument
  */
-operator fun <P1, P2, P3, R> TailFunction3<in P1, in P2, in P3, out R>.get(p1: P1, p2: P2, p3: P3): TailCall<R> = IntermediateCall { this(p1, p2, p3) }
+operator fun <P1, P2, P3, R> TF3<in P1, in P2, in P3, out R>.get(p1: P1, p2: P2, p3: P3): Call<R> = Step { this(p1, p2, p3) }
 
 /**
- * @receiver wrapped as final [TailCall]
+ * @receiver wrapped as final [Call]
  */
-val <R> R.ret: TailCall<R>
-    get() = object : TailCall<R> {
+val <R> R.ret: Call<R>
+    get() = object : Call<R> {
         override val fix: R = this@ret
     }
 
 /**
- * implementation of intermediate [TailCall]
+ * implementation of intermediate [Call]
  */
-private class IntermediateCall<out R>(private val next: () -> TailCall<R>) : TailCall<R> {
+private class Step<out R>(private val next: TF0<R>) : Call<R> {
     override val fix: R
         get() {
             var step = next()
-            while (step is IntermediateCall) step = step.next()
+            while (step is Step) step = step.next()
             return step.fix
         }
 }

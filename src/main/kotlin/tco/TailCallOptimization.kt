@@ -1,10 +1,10 @@
 package tco
 
-private val evenOpt: TailFunction1<Int, Boolean> = { n -> if (n == 0) true.ret else oddOpt[n - 1] }
-private val oddOpt: TailFunction1<Int, Boolean> = { n -> if (n == 0) false.ret else evenOpt[n - 1] }
+private val evenOpt: TF1<Int, Boolean> = { n -> if (n == 0) true.ret else oddOpt[n - 1] }
+private val oddOpt: TF1<Int, Boolean> = { n -> if (n == 0) false.ret else evenOpt[n - 1] }
 
-private fun evenOptF(n: Int): TailCall<Boolean> = if (n == 0) true.ret else ::oddOptF[n - 1]
-private fun oddOptF(n: Int): TailCall<Boolean> = if (n == 0) false.ret else ::evenOptF[n - 1]
+private fun evenOptF(n: Int): Call<Boolean> = if (n == 0) true.ret else ::oddOptF[n - 1]
+private fun oddOptF(n: Int): Call<Boolean> = if (n == 0) false.ret else ::evenOptF[n - 1]
 
 fun main() {
     println(evenOpt(10).fix) // корректно напечатает true
