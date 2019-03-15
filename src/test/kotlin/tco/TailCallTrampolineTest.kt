@@ -94,8 +94,10 @@ class TailCallTrampolineTest {
         private lateinit var nextAccumulator: BigInteger
         private lateinit var accumulator: BigInteger
         private lateinit var n: BigInteger
-        private val fib0: TF0<BigInteger> by lazy {
-            {
+
+        private val fib0: TF0<BigInteger> = ::fib0
+
+        private fun fib0(): Call<BigInteger> =
                 if (n == ONE) accumulator.ret
                 else {
                     val tmp = nextAccumulator
@@ -104,29 +106,24 @@ class TailCallTrampolineTest {
                     n--
                     fib0.call()
                 }
-            }
-        }
 
-        private val fib1: TF1<Fib1Arguments, BigInteger> by lazy {
-            { (nextAccumulator, accumulator, n): Fib1Arguments ->
-                if (n == 1) accumulator.ret
-                else fib1[Triple(nextAccumulator + accumulator, nextAccumulator, n - 1)]
-            }
-        }
+        private fun fib1(args: Fib1Arguments): Call<BigInteger> =
+                if (args.third == 1) args.second.ret
+                else {
+                    val (nextAccumulator, accumulator, n) = args
+                    ::fib1[Triple(nextAccumulator + accumulator, nextAccumulator, n - 1)]
+                }
 
-        private val fib2: TF2<Fib2Accumulators, Int, BigInteger> by lazy {
-            { (nextAccumulator, accumulator): Fib2Accumulators, n: Int ->
-                if (n == 1) accumulator.ret
-                else fib2[nextAccumulator + accumulator to nextAccumulator, n - 1]
-            }
-        }
+        private fun fib2(accumulators: Fib2Accumulators, n: Int): Call<BigInteger> =
+                if (n == 1) accumulators.second.ret
+                else {
+                    val (nextAccumulator, accumulator) = accumulators
+                    ::fib2[nextAccumulator + accumulator to nextAccumulator, n - 1]
+                }
 
-        private val fib3: TF3<BigInteger, BigInteger, Int, BigInteger> by lazy {
-            { nextAccumulator: BigInteger, accumulator: BigInteger, n: Int ->
+        private fun fib3(nextAccumulator: BigInteger, accumulator: BigInteger, n: Int): Call<BigInteger> =
                 if (n == 1) accumulator.ret
-                else fib3[nextAccumulator + accumulator, nextAccumulator, n - 1]
-            }
-        }
+                else ::fib3[nextAccumulator + accumulator, nextAccumulator, n - 1]
 
         private val even: TF1<Int, Boolean> = { n -> if (n == 0) true.ret else odd[n - 1] }
         private val odd: TF1<Int, Boolean> = { n -> if (n == 0) false.ret else even[n - 1] }
