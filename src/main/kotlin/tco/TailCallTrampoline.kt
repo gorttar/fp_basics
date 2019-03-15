@@ -43,7 +43,7 @@ typealias TailFunction2<P1, P2, R> = (P1, P2) -> TailCall<R>
  * @param P1 - function input type
  * @param R - function output type
  */
-operator fun <P1, R> TailFunction1<in P1, out R>.get(p1: P1): TailCall<R> = IntermediateCall1(this, p1)
+operator fun <P1, R> TailFunction1<in P1, out R>.get(p1: P1): TailCall<R> = IntermediateCall1(p1, this)
 
 /**
  * tail call invocation of [TailFunction2]
@@ -55,7 +55,7 @@ operator fun <P1, R> TailFunction1<in P1, out R>.get(p1: P1): TailCall<R> = Inte
  * @param P2 - 2nd function input type
  * @param R - function output type
  */
-operator fun <P1, P2, R> TailFunction2<in P1, in P2, out R>.get(p1: P1, p2: P2): TailCall<R> = IntermediateCall2(this, p1, p2)
+operator fun <P1, P2, R> TailFunction2<in P1, in P2, out R>.get(p1: P1, p2: P2): TailCall<R> = IntermediateCall2(p1, p2, this)
 
 /**
  * @receiver wrapped as final [TailCall]
@@ -88,8 +88,8 @@ private abstract class IntermediateCall<out R> : TailCall<R> {
  * @param nextStep - [TailFunction1] representing next evaluation step
  * @param p1 - input for next step
  */
-private class IntermediateCall1<in P1, out R>(private val nextStep: TailFunction1<P1, R>,
-                                              private val p1: P1)
+private class IntermediateCall1<in P1, out R>(private val p1: P1,
+                                              private val nextStep: TailFunction1<P1, R>)
     : IntermediateCall<R>() {
     override val next get() = nextStep(p1)
 }
@@ -100,9 +100,9 @@ private class IntermediateCall1<in P1, out R>(private val nextStep: TailFunction
  * @param p1 - 1st input for next step
  * @param p2 - 2nd input for next step
  */
-private class IntermediateCall2<in P1, in P2, out R>(private val nextStep: TailFunction2<P1, P2, R>,
-                                                     private val p1: P1,
-                                                     private val p2: P2)
+private class IntermediateCall2<in P1, in P2, out R>(private val p1: P1,
+                                                     private val p2: P2,
+                                                     private val nextStep: TailFunction2<P1, P2, R>)
     : IntermediateCall<R>() {
     override val next get() = nextStep(p1, p2)
 }
