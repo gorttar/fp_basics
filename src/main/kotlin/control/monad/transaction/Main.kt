@@ -11,7 +11,7 @@ fun main() {
     transaction.flatMapS { pureSession((it + 1)) }
     session.map { it * 2 }
     session.flatMap { pureSession((it * 2)) }
-    pureTransaction(transaction).flat()
-    pureTransaction(session).flatS()
-    pureSession(pureSession(session)).flat().flat()
+    pureTransaction(transaction).flatten()
+    pureTransaction(session).flattenS()
+    pureSession(pureSession(session)).flatten().flatten()
 }
