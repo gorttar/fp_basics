@@ -1,9 +1,9 @@
-group 'com.gorttar'
-version '1.0-SNAPSHOT'
+group "com.gorttar"
+version "1.0-SNAPSHOT"
 
-apply plugin: 'java'
-apply plugin: 'kotlin'
-apply plugin: 'idea'
+apply plugin: "java"
+apply plugin: "kotlin"
+apply plugin: "idea"
 
 repositories {
     mavenCentral()
@@ -14,27 +14,31 @@ test {
 }
 
 dependencies {
-    compile 'com.google.code.findbugs:jsr305:1.3.9'
-    testCompile 'org.testng:testng:6.13.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
+    compile group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: kotlin_version
+    compile group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: kotlin_version
+    compile group: "org.jetbrains.kotlin", name: "kotlin-script-runtime", version: kotlin_version
+    compile group: "com.google.code.findbugs", name: "jsr305", version: "1.3.9"
+    compile group: "org.hibernate", name: "hibernate-core", version: hibernate_version
+    testCompile group: "org.testng", name: "testng", version: testng_version
+    testCompile group: "com.nhaarman", name: "mockito-kotlin", version: "1.6.0"
 }
 
 buildscript {
-    ext.kotlin_version = '1.3.21'
+    ext.kotlin_version = "1.3.50"
+    ext.hibernate_version = "5.4.6.Final"
+    ext.testng_version = "6.14.3"
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.testng:testng:6.13.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath  group: "org.testng", name: "testng", version: testng_version
+        classpath group: "org.jetbrains.kotlin", name: "kotlin-gradle-plugin", version: kotlin_version
     }
 }
 
 compileJava {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }
 
 compileKotlin {
@@ -50,5 +54,5 @@ compileTestKotlin {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.8'
+    gradleVersion = "4.8"
 }
