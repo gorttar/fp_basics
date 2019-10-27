@@ -17,35 +17,65 @@ public typealias Session<T> = (SessionContext) -> T
 public typealias Transaction<T> = (TransactionContext) -> T
 
 public class Transactor(private val em: EntityManager) {
-    public operator fun <T> get(session: Session<T>): T {
-        /** some session initialization code */
-        return try {
-            /** some session initialization code */
-            val result = SessionContextImpl(em)[session]
-            /** some result post processing code */
-            result
+    public operator fun <T> get(session: Session<T>): T = tryTransaction(
+            SessionContextImpl(em),
+            Handlers(
+                    beforeTry = { println("Session before try") },
+                    beforeBody = { println("Session before body") },
+                    onSuccess = { println("Session on success") },
+                    onError = { println("Session on error") },
+                    cleanup = { println("Session cleanup") }
+            ), session
+    )
+
+    public operator fun <T> invoke(transaction: Transaction<T>): T =
+            tryTransaction(
+                    TransactionContextImpl(em),
+                    Handlers(
+                            beforeTry = { println("Transaction before try") },
+                            beforeBody = {
+                                println("Transaction before body")
+                                em.transaction.begin()
+                            },
+                            onSuccess = {
+                                println("Transaction on success")
+                                em.transaction.commit()
+                            },
+                            onError = {
+                                println("Transaction on error")
+                                em.transaction.rollback()
+                            },
+                            cleanup = { println("Transaction cleanup") }
+                    ),
+                    transaction
+            )
+
+    private fun <R, HC : HibernateContext> tryTransaction(
+            hc: HC,
+            handlers: Handlers = Handlers(),
+            body: (HC) -> R
+    ): R = if (hc.transaction.isActive) body(hc) else with(handlers) {
+        beforeTry()
+        try {
+            beforeBody()
+            val r = body(hc)
+            onSuccess()
+            r
         } catch (t: Throwable) {
-            /** some session exception handler*/
+            onError()
             throw t
         } finally {
-            /** some session cleanup code */
+            cleanup()
         }
     }
 
-    public operator fun <T> invoke(transaction: Transaction<T>): T {
-        /** some transaction initialization code */
-        return try {
-            /** some transaction initialization code */
-            val result = TransactionContextImpl(em)(transaction)
-            /** some result post processing code */
-            result
-        } catch (t: Throwable) {
-            /** some transaction exception handler*/
-            throw t
-        } finally {
-            /** some transaction cleanup code */
-        }
-    }
+    private class Handlers(
+            val beforeTry: () -> Unit = {},
+            val beforeBody: () -> Unit = {},
+            val onSuccess: () -> Unit = {},
+            val onError: () -> Unit = {},
+            val cleanup: () -> Unit = {}
+    )
 }
 
 private class SessionContextImpl(em: EntityManager) : SessionContext(em)
